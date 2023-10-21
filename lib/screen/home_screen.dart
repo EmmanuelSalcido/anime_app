@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: [
-          BottomNavigationBarItem( //barra de abajo ligada a screens
+          BottomNavigationBarItem( // Barra de abajo vinculada a las pantallas
             icon: Icon(Icons.home),
             label: 'Home',
           ),
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
-            label: 'Que Pongo Aqui xD',
+            label: 'Top Animes',
           ),
         ],
       ),
@@ -67,19 +67,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRecientesAnadidosSection() {
-    // session 1
+    // Sección 1: Recientes añadidos
     return Container(
       color: Colors.grey[200],
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // session 1 de imagen grande
+          // Imagen grande en la sección de Recientes añadidos
           Container(
             height: 150,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/no-image.jpg'), // imagen 1 grande
+                image: AssetImage('assets/no-image.jpg'), // Imagen 1 grande
                 fit: BoxFit.cover,
               ),
             ),
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 150,
                   height: 150,
                 );
-              }, 
+              },
             ),
           ),
         ],
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAnimesSection() {
-    // session 2 de anime
+    // Sección 2: Animes
     return Container(
       color: Colors.grey[300],
       padding: EdgeInsets.all(16),
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5, // Cantidad de imágenes q
+              itemCount: 5, // Cantidad de imágenes
               itemBuilder: (context, index) {
                 return Image.asset(
                   'assets/no-image.jpg',
@@ -141,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        
       ),
     );
   }

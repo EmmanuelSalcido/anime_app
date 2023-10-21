@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:anime_app/screen/anime_detail_screen.dart';
+
 class ExploreScreen extends StatefulWidget {
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
-  List<dynamic> animeList = []; // Lista de resultados de la búsqueda
+  List<dynamic> animeList = [];
   TextEditingController searchController = TextEditingController();
 
-  // Función para realizar la búsqueda de animes
   Future<void> searchAnimes(String query) async {
     final apiUrl = Uri.parse('https://api.jikan.moe/v4/anime?q=$query');
     final response = await http.get(apiUrl);
@@ -35,7 +36,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
       ),
       body: Column(
         children: [
-          // Barra de búsqueda
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -56,7 +56,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               },
             ),
           ),
-          // Lista de resultados de la búsqueda
           Expanded(
             child: ListView.builder(
               itemCount: animeList.length,
@@ -72,11 +71,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   Widget _buildAnimeItem(dynamic animeData) {
     final animeTitle = animeData['title'];
+    final animeImageURL = animeData['imageURL'];
 
     return ListTile(
       title: Text(animeTitle),
       onTap: () {
-        // Agregar acción al hacer clic en un anime si es necesario
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AnimeDetailScreen(
+              animeTitle: animeTitle,
+              //animeImageURL: animeImageURL,
+            ),
+          ),
+        );
       },
     );
   }
