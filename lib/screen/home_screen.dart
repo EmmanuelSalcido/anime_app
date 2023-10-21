@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
-            label: 'Top Anime',
+            label: 'Que Pongo Aqui xD',
           ),
         ],
       ),
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 150,
                   height: 150,
                 );
-              },
+              }, 
             ),
           ),
         ],
