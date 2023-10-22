@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'explore_screen.dart';
-import 'top_anime_screen.dart';
 import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
 
