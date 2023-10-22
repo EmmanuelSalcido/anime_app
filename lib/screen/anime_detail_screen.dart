@@ -1,33 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class AnimeDetailScreen extends StatelessWidget {
+class AnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
-  final Map<String, dynamic>? animeDetails; // Usa '?' para hacerlo opcional
+  final Map<String, dynamic>? animeDetails;
 
   AnimeDetailScreen({required this.animeTitle, this.animeDetails});
 
-  void _watchAnime() {
-    final streamingApiUrl = 'https://api.jikan.moe/v4/anime/${animeDetails?['mal_id']}/streaming';
-    launch(streamingApiUrl);
+  @override
+  _AnimeDetailScreenState createState() => _AnimeDetailScreenState();
+}
+
+class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
+  late YoutubePlayerController _controller;
+  String videoError = '';
+  bool isVideoVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final embedUrl = widget.animeDetails?['trailer']?['embed_url'] as String?;
+    if (embedUrl != null) {
+      _controller = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(embedUrl)!,
+        flags: YoutubePlayerFlags(
+          autoPlay: false, // No se reproduce automáticamente
+          mute: false,
+        ),
+      );
+    } else {
+      setState(() {
+        videoError = 'No se encontró la fuente del video.';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = animeDetails?['images']?['jpg']?['large_image_url'];
-    final synopsis = animeDetails?['synopsis'];
+    final imageUrl = widget.animeDetails?['images']?['jpg']?['large_image_url'];
+    final synopsis = widget.animeDetails?['synopsis'];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(animeTitle),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        title: Text(
+          widget.animeTitle,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        backgroundColor: Colors.black, // Color de fondo de la barra
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icono de flecha para regresar
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -35,16 +63,16 @@ class AnimeDetailScreen extends StatelessWidget {
           child: Column(
             children: [
               // Imagen del anime
-              imageUrl != null
-                  ? Image.network(imageUrl, width: double.infinity, height: 300, fit: BoxFit.cover)
-                  : Placeholder(
-                      fallbackHeight: 300,
-                    ),
+              if (imageUrl != null)
+                Image.network(imageUrl)
+              else
+                Container(), // Puedes personalizar esto si la imagen no está disponible
+
               SizedBox(height: 16),
 
               // Sinopsis
               Text(
-                animeTitle,
+                widget.animeTitle,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
@@ -53,28 +81,42 @@ class AnimeDetailScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               ),
 
-              // Botón para ver en streaming
               SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                height: 200, // Altura del cuadro para streaming
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black), // Borde del cuadro
-                ),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: _watchAnime,
-                    child: Text('Ver en Streaming'),
-                  ),
-                ),
-              ),
 
-              // Espacio en blanco
-              SizedBox(height: 16),
+              // Video del trailer del anime o mensaje de error
+              if (videoError.isNotEmpty)
+                Center(
+                  child: Text(
+                    videoError,
+                    style: TextStyle(fontSize: 16, color: Colors.red),
+                  ),
+                )
+              else
+                !isVideoVisible
+                    ? ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isVideoVisible = true;
+                          });
+                        },
+                        child: Text('Ver Trailer'),
+                      )
+                    : YoutubePlayer(
+                        controller: _controller,
+                        liveUIColor: Colors.amber,
+                      ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_controller.value.isReady) {
+      _controller.dispose();
+    }
+    super.dispose();
   }
 }
