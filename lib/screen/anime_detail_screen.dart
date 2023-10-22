@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class AnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
@@ -47,11 +48,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            color: Colors.white, // Color del texto en la barra
           ),
         ),
         backgroundColor: Colors.black, // Color de fondo de la barra
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Icono de flecha para regresar
+          icon: Icon(MdiIcons.arrowLeft), // Icono de flecha para regresar
           onPressed: () {
             Navigator.pop(context);
           },
