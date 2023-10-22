@@ -40,17 +40,18 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
       body: ListView.builder(
         itemCount: topAnimeList.length,
         itemBuilder: (context, index) {
-          return _buildAnimeItem(topAnimeList[index]);
+          return _buildAnimeItem(topAnimeList[index], index + 1);
         },
       ),
     );
   }
 
-  Widget _buildAnimeItem(Map<String, dynamic> animeData) {
+  Widget _buildAnimeItem(Map<String, dynamic> animeData, int rank) {
     final animeTitle = animeData['title'];
     final animeImageURL = animeData['imageURL'];
 
     return ListTile(
+      leading: Text('$rank'), // Contador de rango
       title: Text(animeTitle),
       onTap: () {
         Navigator.of(context).push(

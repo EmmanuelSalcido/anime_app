@@ -14,10 +14,12 @@ dependencies:
   http: ^0.13.6
   cupertino_icons: ^1.0.2
   jikan_api: ^2.1.0
+  url_launcher: ^6.1.14
   
 flutter:
   assets:
     - assets/no-image.jpg
+    - assets/goku.jpg
     
 dev_dependencies:
   flutter_test:
