@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'explore_screen.dart';
 import 'top_anime_screen.dart';
 import 'package:anime_app/screen/anime_detail_screen.dart';
+import 'package:anime_app/screen/top_anime_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -16,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('ProyectoAnimeApi'),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black, // Fondo negro
       ),
       body: _buildScreen(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -30,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: [
-          BottomNavigationBarItem(
+          BottomNavigationBarItem( // Barra de abajo vinculada a las pantallas
             icon: Icon(Icons.home),
             label: 'Home',
           ),
@@ -48,12 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildScreen(int index) {
-    if (index == 0) {
-      return _buildHomeContent();
-    } else if (index == 1) {
-      return ExploreScreen();
-    } else {
-      return TopAnimeScreen();
+    switch (index) {
+      case 0:
+        return _buildHomeContent();
+      case 1:
+        return ExploreScreen();
+      case 2:
+        return TopAnimeScreen();
+      default:
+        return Container(); // Valor de retorno por defecto
     }
   }
 
@@ -67,23 +72,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRecientesAnadidosSection() {
+    // Sección 1: Recientes añadidos
     return Container(
       color: Colors.grey[200],
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () {
-              _navigateToAnimeDetail('Recientes Añadidos');
-            },
-            child: Container(
-              height: 150,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/goku.jpg'),
-                  fit: BoxFit.cover,
-                ),
+          // Imagen grande en la sección de Recientes añadidos
+          Container(
+            height: 150,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/goku.jpg'), // Imagen 1 grande
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -99,17 +101,12 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: 5, // Cantidad de imágenes
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    _navigateToAnimeDetail('Reciente Añadido #$index');
-                  },
-                  child: Image.asset(
-                    'assets/no-image.jpg',
-                    width: 150,
-                    height: 150,
-                  ),
+                return Image.asset(
+                  'assets/no-image.jpg',
+                  width: 150,
+                  height: 150,
                 );
               },
             ),
@@ -120,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAnimesSection() {
+    // Sección 2: Animes
     return Container(
       color: Colors.grey[300],
       padding: EdgeInsets.all(16),
@@ -137,33 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: 5, // Cantidad de imágenes
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    _navigateToAnimeDetail('Anime #$index');
-                  },
-                  child: Image.asset(
-                    'assets/no-image.jpg',
-                    width: 150,
-                    height: 150,
-                  ),
+                return Image.asset(
+                  'assets/no-image.jpg',
+                  width: 150,
+                  height: 150,
                 );
               },
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _navigateToAnimeDetail(String animeTitle) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => AnimeDetailScreen(
-          animeTitle: animeTitle,
-          animeDetails: null,
-        ),
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AnimeDetailScreen extends StatelessWidget {
   final String animeTitle;
-  final Map<String, dynamic>? animeDetails;
+  final Map<String, dynamic>? animeDetails; // Usa '?' para hacerlo opcional
 
   AnimeDetailScreen({required this.animeTitle, this.animeDetails});
 
@@ -14,70 +14,52 @@ class AnimeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = animeDetails?['images']?['largeImageUrl'];
+    final imageUrl = animeDetails?['images']?['jpg']?['large_image_url'];
     final synopsis = animeDetails?['synopsis'];
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back),
-            ),
-            Text(animeTitle),
-          ],
-        ),
+        title: Text(animeTitle),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
-      body: Container(
-        color: Colors.cyan,
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 200,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(imageUrl ?? 'https://via.placeholder.com/200x300'),
-                        fit: BoxFit.cover,
-                      ),
+              // Imagen del anime
+              imageUrl != null
+                  ? Image.network(imageUrl, width: double.infinity, height: 300, fit: BoxFit.cover)
+                  : Placeholder(
+                      fallbackHeight: 300,
                     ),
-                  ),
-                  SizedBox(width: 16),
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          animeTitle,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          synopsis ?? 'Sin sinopsis disponible',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(height: 16),
 
-              // Cuadro grande para streaming
+              // Sinopsis
+              Text(
+                animeTitle,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Text(
+                synopsis ?? 'Sin sinopsis disponible',
+                style: TextStyle(fontSize: 16),
+              ),
+
+              // Botón para ver en streaming
+              SizedBox(height: 16),
               Container(
                 width: double.infinity,
-                height: 200,
+                height: 200, // Altura del cuadro para streaming
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: Colors.black), // Borde del cuadro
                 ),
                 child: Center(
                   child: ElevatedButton(
@@ -86,18 +68,9 @@ class AnimeDetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
 
               // Espacio en blanco
-              Row(
-                children: [
-                  Expanded(child: Container()),
-                  ElevatedButton(
-                    onPressed: _watchAnime,
-                    child: Text('Ver en Streaming'),
-                  ),
-                ],
-              ),
+              SizedBox(height: 16),
             ],
           ),
         ),

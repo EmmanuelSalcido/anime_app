@@ -20,6 +20,7 @@ flutter:
   assets:
     - assets/no-image.jpg
     - assets/goku.jpg
+    - assets/placeholder.png
     
 dev_dependencies:
   flutter_test:

@@ -35,34 +35,43 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Animes'),
+        backgroundColor: Colors.black, // Fondo negro en toda la barra del título
+        title: Text(
+          'Top Animes',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: ListView.builder(
         itemCount: topAnimeList.length,
         itemBuilder: (context, index) {
-          return _buildAnimeItem(topAnimeList[index], index + 1);
+          final animeData = topAnimeList[index];
+          final animeTitle = animeData['title'];
+          final imageUrl = animeData['images']['jpg']['large_image_url'];
+
+          return ListTile(
+            title: Text('Top ${index + 1} - $animeTitle', style: TextStyle(fontSize: 18)),
+            contentPadding: EdgeInsets.all(16),
+            leading: imageUrl != null
+                ? Image.network(
+                    imageUrl,
+                    width: 200,
+                    height: 300,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset('assets/placeholder.png'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AnimeDetailScreen(
+                    animeTitle: animeTitle,
+                    animeDetails: animeData,
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
-    );
-  }
-
-  Widget _buildAnimeItem(Map<String, dynamic> animeData, int rank) {
-    final animeTitle = animeData['title'];
-    final animeImageURL = animeData['imageURL'];
-
-    return ListTile(
-      leading: Text('$rank'), // Contador de rango
-      title: Text(animeTitle),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => AnimeDetailScreen(
-              animeTitle: animeTitle,
-              animeDetails: animeData,
-            ),
-          ),
-        );
-      },
     );
   }
 }
