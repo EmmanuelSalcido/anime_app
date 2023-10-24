@@ -20,6 +20,7 @@ dependencies:
   flutter_youtube_view: ^2.0.4
   youtube_player_flutter: ^8.1.2
   material_design_icons_flutter: ^7.0.7296
+  cached_network_image: ^3.3.0
   
 flutter:
   assets:

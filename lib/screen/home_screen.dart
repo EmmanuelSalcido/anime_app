@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'explore_screen.dart';
 import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,6 +14,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  List<Anime> recentAnimes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecentAnimes();
+  }
+
+  Future<void> _fetchRecentAnimes() async {
+    final response = await http.get(
+      Uri.parse('https://api.jikan.moe/v4/seasons/now?sfw'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final animeList = data['data'] as List;
+
+      setState(() {
+        recentAnimes = animeList.map((json) => Anime.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Error al cargar los animes recientes');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('ProyectoAnimeApi'),
         centerTitle: true,
-        backgroundColor: Colors.black, // Fondo negro
+        backgroundColor: Colors.black,
       ),
       body: _buildScreen(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -31,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: [
-          BottomNavigationBarItem( // Barra de abajo vinculada a las pantallas
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
@@ -57,91 +85,98 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return TopAnimeScreen();
       default:
-        return Container(); // Valor de retorno por defecto
+        return Container();
     }
   }
 
   Widget _buildHomeContent() {
     return Column(
       children: [
-        _buildRecientesAnadidosSection(),
-        _buildAnimesSection(),
+        Container(
+          height: 150,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/goku.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        Text(
+          'Animes Recientes',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemCount: recentAnimes.length,
+            itemBuilder: (context, index) {
+              final anime = recentAnimes[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return HomeDetailScreen(anime: anime);
+                    },
+                  ));
+                },
+                child: CachedNetworkImage(
+                  imageUrl: anime.imageUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
+}
 
-  Widget _buildRecientesAnadidosSection() {
-    // Sección 1: Recientes añadidos
-    return Container(
-      color: Colors.grey[200],
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Imagen grande en la sección de Recientes añadidos
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/goku.jpg'), // Imagen 1 grande
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Recientes añadidos',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5, // Cantidad de imágenes
-              itemBuilder: (context, index) {
-                return Image.asset(
-                  'assets/no-image.jpg',
-                  width: 150,
-                  height: 150,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+class Anime {
+  final String title;
+  final String imageUrl;
+
+  Anime({required this.title, required this.imageUrl});
+
+  factory Anime.fromJson(Map<String, dynamic> json) {
+    final imageUrl = json['images']['jpg']['large_image_url'] ?? '';
+    return Anime(
+      title: json['title'] ?? 'Sin título',
+      imageUrl: imageUrl,
     );
   }
+}
 
-  Widget _buildAnimesSection() {
-    // Sección 2: Animes
-    return Container(
-      color: Colors.grey[300],
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+class HomeDetailScreen extends StatelessWidget {
+  final Anime anime;
+
+  HomeDetailScreen({required this.anime});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(anime.title),
+      ),
+      body: Column(
         children: [
-          Text(
-            'Animes',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          CachedNetworkImage(
+            imageUrl: anime.imageUrl,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
-          SizedBox(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5, // Cantidad de imágenes
-              itemBuilder: (context, index) {
-                return Image.asset(
-                  'assets/no-image.jpg',
-                  width: 150,
-                  height: 150,
-                );
-              },
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              anime.title,
+              style: TextStyle(fontSize: 18),
             ),
           ),
         ],
