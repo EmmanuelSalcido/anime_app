@@ -5,6 +5,7 @@ import 'package:anime_app/screen/top_anime_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'home_anime_detail_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  List<Anime> recentAnimes = [];
+  List<Map<String, dynamic>> recentAnimes = [];
 
   @override
   void initState() {
@@ -28,14 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final animeList = data['data'] as List;
+      final jsonData = json.decode(response.body);
+      final recentAnimesData = jsonData['data'];
 
       setState(() {
-        recentAnimes = animeList.map((json) => Anime.fromJson(json)).toList();
+        recentAnimes = recentAnimesData.cast<Map<String, dynamic>>();
       });
-    } else {
-      throw Exception('Error al cargar los animes recientes');
     }
   }
 
@@ -43,9 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ProyectoAnimeApi'),
-        centerTitle: true,
         backgroundColor: Colors.black,
+        title: Text(
+          'ProyectoAnimeApi',
+          style: TextStyle(color: Colors.white),
+          
+        ),
       ),
       body: _buildScreen(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -81,106 +83,66 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return _buildHomeContent();
       case 1:
+        // Agrega la pantalla "ExploreScreen" si la tienes
         return ExploreScreen();
       case 2:
+        // Agrega la pantalla "TopAnimeScreen" si la tienes
         return TopAnimeScreen();
       default:
         return Container();
     }
   }
 
-  Widget _buildHomeContent() {
-    return Column(
-      children: [
-        Container(
-          height: 150,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/goku.jpg'),
-              fit: BoxFit.cover,
+Widget _buildHomeContent() {
+  return Column(
+    children: [
+      AppBar(
+        backgroundColor: Colors.black,
+        title: Center(
+          child: Text(
+            'Animes De Temporada',
+            style: TextStyle(
+              color: Colors.white,
             ),
           ),
         ),
-        SizedBox(height: 16),
-        Text(
-          'Animes Recientes',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+      ),
+      Expanded(
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
           ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemCount: recentAnimes.length,
-            itemBuilder: (context, index) {
-              final anime = recentAnimes[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return HomeDetailScreen(anime: anime);
-                    },
-                  ));
-                },
-                child: CachedNetworkImage(
-                  imageUrl: anime.imageUrl,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+          itemCount: recentAnimes.length,
+          itemBuilder: (context, index) {
+            final animeData = recentAnimes[index];
+            final animeTitle = animeData['title'];
+            final imageUrl = animeData['images']['jpg']['large_image_url'];
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomeAnimeDetailScreen(
+                      animeTitle: animeTitle,
+                      animeDetails: animeData,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.all(8),
+                child: Image.network(
+                  imageUrl,
+                  width: 250,
+                  height: 350,
+                  fit: BoxFit.cover,
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
-      ],
-    );
-  }
-}
-
-class Anime {
-  final String title;
-  final String imageUrl;
-
-  Anime({required this.title, required this.imageUrl});
-
-  factory Anime.fromJson(Map<String, dynamic> json) {
-    final imageUrl = json['images']['jpg']['large_image_url'] ?? '';
-    return Anime(
-      title: json['title'] ?? 'Sin título',
-      imageUrl: imageUrl,
-    );
-  }
-}
-
-class HomeDetailScreen extends StatelessWidget {
-  final Anime anime;
-
-  HomeDetailScreen({required this.anime});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(anime.title),
       ),
-      body: Column(
-        children: [
-          CachedNetworkImage(
-            imageUrl: anime.imageUrl,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              anime.title,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    ],
+  );
+}
 }
