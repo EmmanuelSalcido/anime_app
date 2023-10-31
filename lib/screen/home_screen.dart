@@ -96,16 +96,24 @@ class _HomeScreenState extends State<HomeScreen> {
 Widget _buildHomeContent() {
   return Column(
     children: [
-      AppBar(
-        backgroundColor: Colors.black,
-        title: Center(
-          child: Text(
-            'Animes De Temporada',
+      // Agregar la imagen de Goku aquí
+      Column(
+        children: [
+          Image.asset(
+            'assets/goku.jpg', // Ruta de la imagen de Goku
+            width: double.infinity,
+            height: 200, // Ajusta la altura según tus necesidades
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 8), // Espacio entre la imagen y el título
+          Text(
+            'Animes de Temporada',
             style: TextStyle(
-              color: Colors.white,
+              fontSize: 18, // Ajusta el tamaño del texto según tus necesidades
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
+        ],
       ),
       Expanded(
         child: GridView.builder(
