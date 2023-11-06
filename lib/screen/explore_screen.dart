@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:anime_app/screen/anime_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -71,20 +70,70 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   Widget _buildAnimeItem(dynamic animeData) {
     final animeTitle = animeData['title'];
-    final animeImageURL = animeData['imageURL'];
+    final imageUrl = animeData['images']['jpg']['large_image_url'];
+    final synopsis = animeData['synopsis'];
+    final trailerUrl = animeData['trailer_url'] as String?;
 
     return ListTile(
       title: Text(animeTitle),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AnimeDetailScreen(
+            builder: (context) => ExploreDetailScreen(
               animeTitle: animeTitle,
-              //animeImageURL: animeImageURL,
+              imageUrl: imageUrl,
+              synopsis: synopsis,
+              trailerUrl: trailerUrl,
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ExploreDetailScreen extends StatelessWidget {
+  final String animeTitle;
+  final String imageUrl;
+  final String synopsis;
+  final String? trailerUrl;
+
+  ExploreDetailScreen({
+    required this.animeTitle,
+    required this.imageUrl,
+    required this.synopsis,
+    this.trailerUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(animeTitle),
+        backgroundColor: Colors.black,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.network(imageUrl),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                synopsis,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            if (trailerUrl != null)
+              ElevatedButton(
+                onPressed: () {
+                  // Aquí puedes abrir el reproductor de video o hacer lo que necesites con el tráiler
+                  // Puedes utilizar el paquete de reproducción de videos que prefieras.
+                },
+                child: Text('Ver Trailer'),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
