@@ -1,78 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class ExploreDetailScreen extends StatelessWidget {
+class ExploreDetailScreen extends StatefulWidget {
   final String animeTitle;
   final String synopsis;
+  final String? imageUrl;
   final String? trailerUrl;
 
   ExploreDetailScreen({
     required this.animeTitle,
     required this.synopsis,
+    this.imageUrl,
     this.trailerUrl,
   });
+
+  @override
+  _ExploreDetailScreenState createState() => _ExploreDetailScreenState();
+}
+
+class _ExploreDetailScreenState extends State<ExploreDetailScreen> {
+  late YoutubePlayerController? _controller;
+  bool isVideoVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.trailerUrl != null) {
+      _controller = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(widget.trailerUrl!)!,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(animeTitle),
+        title: Text(widget.animeTitle),
         backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Imagen del anime si la tienes
-            // Agrega aquí la imagen si la tienes
-
             // Título del anime
             Text(
-              animeTitle,
+              widget.animeTitle,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
-            // Trailer del anime si está disponible
-            if (trailerUrl != null)
-              ElevatedButton(
-                onPressed: () {
-                  // Abre el reproductor de YouTube al hacer clic en el botón
-                  YoutubePlayerController _controller = YoutubePlayerController(
-                    initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl!)!,
-                    flags: YoutubePlayerFlags(
-                      autoPlay: true, // Reproducir automáticamente el video
-                    ),
-                  );
-
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => YoutubePlayerBuilder(
-                        player: YoutubePlayer(
-                          controller: _controller,
-                        ),
-                        builder: (context, player) {
-                          return Scaffold(
-                            appBar: AppBar(
-                              title: Text(animeTitle),
-                            ),
-                            body: Center(child: player),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-                child: Text('Ver Trailer'),
-              ),
+            // Imagen del anime
+            if (widget.imageUrl != null)
+              Image.network(widget.imageUrl!)
+            else
+              Container(),
 
             // Sinopsis del anime
             Text(
-              synopsis,
+              widget.synopsis,
               style: TextStyle(fontSize: 16),
             ),
+
+            // Botón para ver u ocultar el video
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  isVideoVisible = !isVideoVisible;
+                });
+              },
+              child: Text(isVideoVisible ? 'Ocultar Tráiler' : 'Ver Tráiler'),
+            ),
+
+            // Reproductor de YouTube para el tráiler si está disponible
+            if (isVideoVisible && widget.trailerUrl != null)
+              YoutubePlayerBuilder(
+                player: YoutubePlayer(
+                  controller: _controller!,
+                  showVideoProgressIndicator: true,
+                ),
+                builder: (context, player) {
+                  return Column(
+                    children: [
+                      Divider(), // Línea divisoria
+                      player,
+                    ],
+                  );
+                },
+              ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (widget.trailerUrl != null && _controller != null) {
+      _controller!.dispose();
+    }
+    super.dispose();
   }
 }
