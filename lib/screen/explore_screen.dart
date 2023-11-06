@@ -59,20 +59,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
       itemCount: upcomingAnimeList.length,
       itemBuilder: (context, index) {
         final animeData = upcomingAnimeList[index];
-        final animeTitle = animeData['title'];
+        final imageUrl = animeData['images']['jpg']['large_image_url'];
+        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible'; // Manejo de sinopsis nula
+
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ExploreDetailScreen(
-                  animeTitle: animeTitle,
-                  synopsis: '',
+                  animeTitle: animeData['title'], // Título del anime
+                  imageUrl: imageUrl, // URL de la imagen
+                  synopsis: synopsis, // Sinopsis del anime
+                  trailerUrl: animeData['trailer_url'], // URL del trailer
                 ),
               ),
             );
           },
           child: Image.network(
-            animeData['images']['jpg']['large_image_url'],
+            imageUrl,
             fit: BoxFit.cover,
           ),
         );

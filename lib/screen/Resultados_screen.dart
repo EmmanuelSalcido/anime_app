@@ -29,7 +29,7 @@ class SearchResultsScreen extends StatelessWidget {
   Widget _buildSearchResults(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
       ),
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
