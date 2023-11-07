@@ -10,7 +10,7 @@ class GokuScreen extends StatefulWidget {
 
 class _GokuScreenState extends State<GokuScreen> {
   final audioPlayer = AudioPlayer();
-  bool isPlaying = true;
+  bool _isPlaying = true;
 
   @override
   void initState() {
@@ -21,18 +21,20 @@ class _GokuScreenState extends State<GokuScreen> {
   }
 
   Future<void> _startAudio() async {
-    await audioPlayer.setAsset('assets/uiTheme.mp3'); 
-    await audioPlayer.play();
+    if (_isPlaying) {
+      await audioPlayer.setAsset('assets/uiTheme.mp3'); 
+      await audioPlayer.play();
+    }
   }
 
   Future<void> _toggleAudio() async {
-    if (isPlaying) {
+    if (_isPlaying) {
       await audioPlayer.pause();
     } else {
       await audioPlayer.play();
     }
     setState(() {
-      isPlaying = !isPlaying;
+      _isPlaying = !_isPlaying;
     });
   }
 
@@ -47,6 +49,12 @@ class _GokuScreenState extends State<GokuScreen> {
   }
 
   @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +63,7 @@ class _GokuScreenState extends State<GokuScreen> {
         leading: IconButton(
           icon: Icon(MdiIcons.arrowLeft), // Cambia el ícono aquí
           onPressed: () {
+            audioPlayer.stop(); // Detiene la música al salir de la pantalla
             Navigator.of(context).pop();
           },
         ),
@@ -74,7 +83,7 @@ class _GokuScreenState extends State<GokuScreen> {
               child: IconButton(
                 onPressed: _toggleAudio,
                 icon: Image.asset(
-                  isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg',
+                  _isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg',
                   width: 24, 
                   height: 24, 
                 ),
@@ -120,7 +129,7 @@ class _GokuScreenState extends State<GokuScreen> {
             bottom: 35, // Ajusta la posición vertical aquí
             right: 24,
             child: Text(
-              'Version: 1.0.7',
+              'Version: 1.0.8',
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
