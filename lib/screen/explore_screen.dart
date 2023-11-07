@@ -104,7 +104,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
               controller: searchController,
               decoration: InputDecoration(
                 labelText: 'Buscar animes...',
-                prefixIcon: Icon(Icons.search),
+                // Quitar el icono por completo
+                prefixIcon: null,
                 border: OutlineInputBorder(),
               ),
               onSubmitted: (query) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GokuScreen extends StatefulWidget {
   @override
@@ -34,10 +36,14 @@ class _GokuScreenState extends State<GokuScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    super.dispose();
+  // Función para abrir el enlace a tu repositorio de GitHub
+  Future<void> _launchRepositoryURL() async {
+    const url = 'https://github.com/EmmanuelSalcido/anime_app'; // Reemplaza con la URL de tu repositorio
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'No se puede abrir $url';
+    }
   }
 
   @override
@@ -45,7 +51,13 @@ class _GokuScreenState extends State<GokuScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black, 
-        title: Text('Welcome to the hell'),
+        title: Text('Welcome to the hell', style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          icon: Icon(MdiIcons.arrowLeft), // Cambia el ícono aquí
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Stack(
         children: [
@@ -53,16 +65,16 @@ class _GokuScreenState extends State<GokuScreen> {
             'assets/gokugod.gif', 
             width: double.infinity,
             height: double.infinity,
-            fit: BoxFit.fill, // cover y fill para que la imagen no se haga zoom
+            fit: BoxFit.fill, 
           ),
           Align(
-            alignment: Alignment.topRight, // Alinea el botón en la esquina superior derecha
+            alignment: Alignment.topRight,
             child: Container(
-              margin: EdgeInsets.all(16),
+              margin: EdgeInsets.all(24),
               child: IconButton(
                 onPressed: _toggleAudio,
                 icon: Image.asset(
-                  isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg', // Ruta de las imágenes de pausa y reproducir con fondo transparente
+                  isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg',
                   width: 24, 
                   height: 24, 
                 ),
@@ -74,21 +86,42 @@ class _GokuScreenState extends State<GokuScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'En China Las Puertas ReCHINAN', //nose que poner en la parte de arriba f
-                  style: TextStyle(fontSize: 25),
+                  'En China Las Puertas ReCHINAN',
+                  style: TextStyle(fontSize: 25, color: Colors.black),
                 ),
               ],
             ),
           ),
-          const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Version: 1.0.4', //nose que poner en la parte de arriba f
-                  style: TextStyle(fontSize: 20),
+          // Enlace al repositorio de GitHub (parte inferior derecha)
+          Positioned(
+            bottom: 64, // Ajusta la posición vertical aquí
+            right: 24,
+            child: InkWell(
+              onTap: _launchRepositoryURL,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
                 ),
-              ],
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset(
+                    'assets/github.png', // Reemplaza con la ruta de tu imagen de GitHub
+                    width: 40,
+                    height: 40,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Texto de la versión (parte inferior derecha)
+          Positioned(
+            bottom: 35, // Ajusta la posición vertical aquí
+            right: 24,
+            child: Text(
+              'Version: 1.0.7',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
           const Center(
@@ -97,7 +130,7 @@ class _GokuScreenState extends State<GokuScreen> {
               children: [
                 Text(
                   'Powered by JIKAN API',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ],
             ),

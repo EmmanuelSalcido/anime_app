@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:translator/translator.dart';
 
@@ -47,9 +48,15 @@ class _ExploreDetailScreenState extends State<ExploreDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.animeTitle),
-        backgroundColor: Colors.black,
-      ),
+  leading: IconButton(
+    icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  ),
+  title: Text('ProyectoAnimeApi'), // Cambia el título aquí
+  backgroundColor: Colors.black,
+),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

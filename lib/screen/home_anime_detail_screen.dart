@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:translator/translator.dart'; // Agrega esta importación
 
@@ -59,12 +60,18 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Animes de Temporada',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+  backgroundColor: Colors.black,
+  title: Text(
+    'Animes de Temporada',
+    style: TextStyle(color: Colors.white),
+  ),
+  leading: IconButton(
+    icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  ),
+),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -1,5 +1,6 @@
-import 'package:anime_app/screen/explore_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:anime_app/screen/explore_detail_screen.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:translator/translator.dart';
 
 class SearchResultsScreen extends StatelessWidget {
@@ -14,13 +15,13 @@ class SearchResultsScreen extends StatelessWidget {
         preferredSize: Size.fromHeight(56.0), // Altura de la AppBar personalizada
         child: AppBar(
           backgroundColor: Colors.black, // Fondo negro
-          title: Text('Resultados de Búsqueda'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
             onPressed: () {
               Navigator.of(context).pop(); // Para regresar a la pantalla anterior
             },
           ),
+          title: Text('Resultados De Busqueda'), // Cambia el título aquí
         ),
       ),
       body: _buildSearchResults(context),
