@@ -19,7 +19,7 @@ class _GokuScreenState extends State<GokuScreen> {
   }
 
   Future<void> _startAudio() async {
-    await audioPlayer.setAsset('assets/uiTheme.mp3'); // Reemplaza con la ubicación de tu archivo de audio
+    await audioPlayer.setAsset('assets/uiTheme.mp3'); 
     await audioPlayer.play();
   }
 
@@ -44,29 +44,37 @@ class _GokuScreenState extends State<GokuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, // Fondo negro
-        title: Text('Goku'),
-        actions: [
-          IconButton(
-            onPressed: _toggleAudio,
-            icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow), // Cambia el icono aquí
-          ),
-        ],
+        backgroundColor: Colors.black, 
+        title: Text('Welcome to the hell'),
       ),
       body: Stack(
         children: [
           Image.asset(
-            'assets/epicgoku.jpg', // Reemplaza con la ubicación de tu imagen de fondo
+            'assets/epicgoku.jpg', 
             width: double.infinity,
             height: double.infinity,
-            fit: BoxFit.cover, // Usa "cover" para que la imagen no se haga zoom
+            fit: BoxFit.cover, // cover para que la imagen no se haga zoom
+          ),
+          Align(
+            alignment: Alignment.topRight, // Alinea el botón en la esquina superior derecha
+            child: Container(
+              margin: EdgeInsets.all(16),
+              child: IconButton(
+                onPressed: _toggleAudio,
+                icon: Image.asset(
+                  isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg', // Ruta de las imágenes de pausa y reproducir con fondo transparente
+                  width: 24, 
+                  height: 24, 
+                ),
+              ),
+            ),
           ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '¡En China Las Puertas reCHINAN!',
+                  '¡En China Las Puertas ReCHINAN!',
                   style: TextStyle(fontSize: 20),
                 ),
               ],

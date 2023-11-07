@@ -29,6 +29,8 @@ flutter:
     - assets/goku.jpg
     - assets/placeholder.png
     - assets/epicgoku.jpg
+    - assets/play.jpg
+    - assets/mute.jpg
     - assets/uiTheme.mp3
     
 dev_dependencies:
