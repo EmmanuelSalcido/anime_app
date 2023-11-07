@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:anime_app/screen/explore_screen.dart';
 import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
-import 'package:anime_app/screen/goku_screen.dart'; // Importa la pantalla de Goku
+import 'package:anime_app/screen/goku_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -61,15 +61,15 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Colors.transparent),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
+            icon: Icon(Icons.explore, color: Colors.transparent),
             label: 'Explorar',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.star, color: Colors.transparent),
             label: 'Top Animes',
           ),
         ],
@@ -82,10 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return _buildHomeContent();
       case 1:
-        // Agrega la pantalla "ExploreScreen" si la tienes
         return ExploreScreen();
       case 2:
-        // Agrega la pantalla "TopAnimeScreen" si la tienes
         return TopAnimeScreen();
       default:
         return Container();
@@ -95,27 +93,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHomeContent() {
     return Column(
       children: [
-        // Imagen de Goku con navegación
         GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => GokuScreen(), // Navegar a la pantalla GokuScreen
+                builder: (context) => GokuScreen(),
               ),
             );
           },
           child: Image.asset(
-            'assets/goku.jpg', // Ruta de la imagen de Goku
+            'assets/goku.jpg',
             width: double.infinity,
-            height: 200, // Ajusta la altura según tus necesidades
+            height: 200,
             fit: BoxFit.cover,
           ),
         ),
-        SizedBox(height: 8), // Espacio entre la imagen y el título
+        SizedBox(height: 8),
         Text(
           'Animes de Temporada',
           style: TextStyle(
-            fontSize: 18, // Ajusta el tamaño del texto según tus necesidades
+            fontSize: 24, // Ajusta el tamaño de la fuente
             fontWeight: FontWeight.bold,
           ),
         ),

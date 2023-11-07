@@ -1,5 +1,6 @@
 import 'package:anime_app/screen/explore_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:translator/translator.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   final List<dynamic> searchResults;

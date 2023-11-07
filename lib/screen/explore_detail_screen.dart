@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:translator/translator.dart';
 
 class ExploreDetailScreen extends StatefulWidget {
   final String animeTitle;
@@ -36,6 +37,12 @@ class _ExploreDetailScreenState extends State<ExploreDetailScreen> {
     }
   }
 
+  Future<String> _translateSynopsis(String synopsis) async {
+    final translator = GoogleTranslator();
+    final translation = await translator.translate(synopsis, from: 'en', to: 'es');
+    return translation.text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +67,18 @@ class _ExploreDetailScreenState extends State<ExploreDetailScreen> {
               Container(),
 
             // Sinopsis del anime
-            Text(
-              widget.synopsis,
-              style: TextStyle(fontSize: 16),
+            FutureBuilder(
+              future: _translateSynopsis(widget.synopsis),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Text(
+                    snapshot.data as String,
+                    style: TextStyle(fontSize: 16),
+                  );
+                } else {
+                  return Text('Cargando sinopsis...');
+                }
+              },
             ),
 
             // Botón para ver u ocultar el video

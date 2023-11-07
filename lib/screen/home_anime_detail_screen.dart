@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:translator/translator.dart'; // Agrega esta importación
 
 class HomeAnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
@@ -14,6 +15,7 @@ class HomeAnimeDetailScreen extends StatefulWidget {
 class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
   late YoutubePlayerController _controller;
   bool isVideoVisible = false;
+  String translatedSynopsis = 'Cargando...'; // Sinopsis traducida
 
   @override
   void initState() {
@@ -28,12 +30,31 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
         ),
       );
     }
+
+    // Traducción de la sinopsis
+    _translateSynopsis();
+  }
+
+  // Función para traducir la sinopsis
+  Future<void> _translateSynopsis() async {
+    final translator = GoogleTranslator();
+
+    final originalSynopsis = widget.animeDetails?['synopsis'];
+    if (originalSynopsis != null) {
+      final translation = await translator.translate(originalSynopsis, from: 'en', to: 'es');
+      setState(() {
+        translatedSynopsis = translation.text;
+      });
+    } else {
+      setState(() {
+        translatedSynopsis = 'Sin sinopsis disponible';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.animeDetails?['images']?['jpg']?['large_image_url'];
-    final synopsis = widget.animeDetails?['synopsis'];
     final ranking = widget.animeDetails?['rank'] ?? 'Sin ranking';
 
     return Scaffold(
@@ -73,9 +94,13 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Sinopsis
+              // Sinopsis traducida
               Text(
-                synopsis ?? 'Sin sinopsis disponible',
+                'Sinopsis:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                translatedSynopsis, // Mostrar la sinopsis traducida
                 style: TextStyle(fontSize: 16),
               ),
 
