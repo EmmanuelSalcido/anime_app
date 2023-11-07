@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'explore_screen.dart';
+import 'package:anime_app/screen/explore_screen.dart';
 import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
+import 'package:anime_app/screen/goku_screen.dart'; // Importa la pantalla de Goku
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'home_anime_detail_screen.dart';
-
+import 'package:anime_app/screen/home_anime_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -46,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(
           'ProyectoAnimeApi',
           style: TextStyle(color: Colors.white),
-          
         ),
       ),
       body: _buildScreen(_currentIndex),
@@ -93,64 +92,69 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-Widget _buildHomeContent() {
-  return Column(
-    children: [
-      // Agregar la imagen de Goku aquí
-      Column(
-        children: [
-          Image.asset(
+  Widget _buildHomeContent() {
+    return Column(
+      children: [
+        // Imagen de Goku con navegación
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => GokuScreen(), // Navegar a la pantalla GokuScreen
+              ),
+            );
+          },
+          child: Image.asset(
             'assets/goku.jpg', // Ruta de la imagen de Goku
             width: double.infinity,
             height: 200, // Ajusta la altura según tus necesidades
             fit: BoxFit.cover,
           ),
-          SizedBox(height: 8), // Espacio entre la imagen y el título
-          Text(
-            'Animes de Temporada',
-            style: TextStyle(
-              fontSize: 18, // Ajusta el tamaño del texto según tus necesidades
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-      Expanded(
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-          ),
-          itemCount: recentAnimes.length,
-          itemBuilder: (context, index) {
-            final animeData = recentAnimes[index];
-            final animeTitle = animeData['title'];
-            final imageUrl = animeData['images']['jpg']['large_image_url'];
-
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => HomeAnimeDetailScreen(
-                      animeTitle: animeTitle,
-                      animeDetails: animeData,
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.all(8),
-                child: Image.network(
-                  imageUrl,
-                  width: 250,
-                  height: 350,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-          },
         ),
-      ),
-    ],
-  );
-}
+        SizedBox(height: 8), // Espacio entre la imagen y el título
+        Text(
+          'Animes de Temporada',
+          style: TextStyle(
+            fontSize: 18, // Ajusta el tamaño del texto según tus necesidades
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemCount: recentAnimes.length,
+            itemBuilder: (context, index) {
+              final animeData = recentAnimes[index];
+              final animeTitle = animeData['title'];
+              final imageUrl = animeData['images']['jpg']['large_image_url'];
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => HomeAnimeDetailScreen(
+                        animeTitle: animeTitle,
+                        animeDetails: animeData,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.all(8),
+                  child: Image.network(
+                    imageUrl,
+                    width: 250,
+                    height: 350,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }
