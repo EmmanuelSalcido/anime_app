@@ -22,6 +22,7 @@ dependencies:
   material_design_icons_flutter: ^7.0.7296
   cached_network_image: ^3.3.0
   just_audio: ^0.9.35
+  translator: ^0.1.7
   
 flutter:
   assets:
@@ -31,9 +32,7 @@ flutter:
     - assets/epicgoku.jpg
     - assets/play.jpg
     - assets/mute.jpg
-    - assets/goku.gif
     - assets/gokugod.gif
-    - assets/gokuui.gif
     - assets/uiTheme.mp3
     
 dev_dependencies:

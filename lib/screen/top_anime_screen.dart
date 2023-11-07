@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:anime_app/screen/anime_detail_screen.dart';
+import 'package:translator/translator.dart';
 
 class TopAnimeScreen extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class TopAnimeScreen extends StatefulWidget {
 
 class _TopAnimeScreenState extends State<TopAnimeScreen> {
   List<Map<String, dynamic>> topAnimeList = [];
+  final translator = GoogleTranslator();
 
   Future<void> fetchTopAnimes() async {
     final apiUrl = Uri.parse('https://api.jikan.moe/v4/top/anime');
@@ -23,6 +25,11 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
         topAnimeList = topAnimes.cast<Map<String, dynamic>>();
       });
     }
+  }
+
+  Future<String> _translateSynopsis(String englishSynopsis) async {
+    var translation = await translator.translate(englishSynopsis, from: 'en', to: 'es');
+    return translation.text;
   }
 
   @override
@@ -49,6 +56,7 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
           final animeData = topAnimeList[index];
           final animeTitle = animeData['title'];
           final imageUrl = animeData['images']['jpg']['large_image_url'];
+          final englishSynopsis = animeData['synopsis'];
 
           return ListTile(
             title: Text('Top ${index + 1} - $animeTitle', style: TextStyle(fontSize: 18)),
@@ -61,7 +69,9 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
                     fit: BoxFit.cover,
                   )
                 : Image.asset('assets/placeholder.png'),
-            onTap: () {
+            onTap: () async {
+              final translatedSynopsis = await _translateSynopsis(englishSynopsis);
+              animeData['synopsis'] = translatedSynopsis; // Actualiza la sinopsis traducida
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AnimeDetailScreen(
