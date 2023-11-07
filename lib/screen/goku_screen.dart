@@ -82,6 +82,17 @@ class _GokuScreenState extends State<GokuScreen> {
           ),
           const Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Version: 1.0.3', //nose que poner en la parte de arriba f
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+          ),
+          const Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
