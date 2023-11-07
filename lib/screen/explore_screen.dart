@@ -75,9 +75,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
             );
           },
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0), // Agregar un espacio de 8 puntos alrededor de cada imagen
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
         );
       },
@@ -109,6 +112,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 searchAnime(query);
               },
             ),
+          ),
+          // Encabezado "Próximamente"
+          Text(
+            'Próximamente',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           // Sección "Próximamente"
           Expanded(child: _buildUpcomingAnimeSection()),

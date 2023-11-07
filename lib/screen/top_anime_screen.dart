@@ -36,9 +36,11 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black, // Fondo negro en toda la barra del título
-        title: Text(
-          'Top Animes',
-          style: TextStyle(color: Colors.white),
+        title: Center(
+          child: Text(
+            'Top Animes',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: ListView.builder(
