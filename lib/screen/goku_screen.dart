@@ -50,10 +50,10 @@ class _GokuScreenState extends State<GokuScreen> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/epicgoku.jpg', 
+            'assets/gokugod.gif', 
             width: double.infinity,
             height: double.infinity,
-            fit: BoxFit.cover, // cover para que la imagen no se haga zoom
+            fit: BoxFit.fill, // cover y fill para que la imagen no se haga zoom
           ),
           Align(
             alignment: Alignment.topRight, // Alinea el botón en la esquina superior derecha
@@ -69,12 +69,23 @@ class _GokuScreenState extends State<GokuScreen> {
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  '¡En China Las Puertas ReCHINAN!',
+                  'En China Las Puertas ReCHINAN', //nose que poner en la parte de arriba f
+                  style: TextStyle(fontSize: 25),
+                ),
+              ],
+            ),
+          ),
+          const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Powered by JIKAN API',
                   style: TextStyle(fontSize: 20),
                 ),
               ],
