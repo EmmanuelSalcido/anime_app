@@ -22,7 +22,7 @@ class _GokuScreenState extends State<GokuScreen> {
 
   Future<void> _startAudio() async {
     if (_isPlaying) {
-      await audioPlayer.setAsset('assets/uiTheme.mp3'); 
+      await audioPlayer.setAsset('assets/uiTheme.mp3');
       await audioPlayer.play();
     }
   }
@@ -39,13 +39,38 @@ class _GokuScreenState extends State<GokuScreen> {
   }
 
   // Función para abrir el enlace a tu repositorio de GitHub
-  Future<void> _launchRepositoryURL() async {
-    const url = 'https://github.com/EmmanuelSalcido/anime_app'; // Reemplaza con la URL de tu repositorio
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'No se puede abrir $url';
-    }
+  Future<void> _launchRepositoryURL(BuildContext context) async {
+    const url =
+        'https://github.com/EmmanuelSalcido/anime_app'; // Reemplaza con la URL de tu repositorio
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirmación"),
+          content: Text("¿Quieres abrir el enlace a GitHub?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (await canLaunch(url)) {
+                  await launch(url);
+                  Navigator.of(context).pop();
+                } else {
+                  Navigator.of(context).pop();
+                  throw 'No se puede abrir $url';
+                }
+              },
+              child: Text("Aceptar"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -58,8 +83,23 @@ class _GokuScreenState extends State<GokuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, 
+        backgroundColor: Colors.black,
         title: Text('Welcome to the hell', style: TextStyle(color: Colors.white)),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade800, // Color gris oscuro
+            ),
+            child: IconButton(
+              icon: _isPlaying
+                  ? Image.asset('assets/mute.jpg') // Imagen de pausa
+                  : Image.asset('assets/play.jpg'), // Imagen de play
+              onPressed: _toggleAudio,
+            ),
+          ),
+        ],
         leading: IconButton(
           icon: Icon(MdiIcons.arrowLeft), // Cambia el ícono aquí
           onPressed: () {
@@ -71,24 +111,10 @@ class _GokuScreenState extends State<GokuScreen> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/gokugod.gif', 
+            'assets/gokugod.gif',
             width: double.infinity,
             height: double.infinity,
-            fit: BoxFit.fill, 
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              margin: EdgeInsets.all(24),
-              child: IconButton(
-                onPressed: _toggleAudio,
-                icon: Image.asset(
-                  _isPlaying ? 'assets/mute.jpg' : 'assets/play.jpg',
-                  width: 24, 
-                  height: 24, 
-                ),
-              ),
-            ),
+            fit: BoxFit.fill,
           ),
           const Center(
             child: Column(
@@ -101,23 +127,25 @@ class _GokuScreenState extends State<GokuScreen> {
               ],
             ),
           ),
-          // Enlace al repositorio de GitHub (parte inferior derecha)
+          // Enlace al repositorio de GitHub (arriba del texto de la versión)
           Positioned(
-            bottom: 64, // Ajusta la posición vertical aquí
+            top: 585, // Ajusta la posición vertical aquí
             right: 24,
             child: InkWell(
-              onTap: _launchRepositoryURL,
+              onTap: () {
+                _launchRepositoryURL(context);
+              },
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blue,
+                  color: Colors.blue.withOpacity(0.7), // Color de fondo con opacidad
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Image.asset(
                     'assets/github.png', // Reemplaza con la ruta de tu imagen de GitHub
-                    width: 40,
-                    height: 40,
+                    width: 24,
+                    height: 24,
                     color: Colors.white,
                   ),
                 ),
@@ -129,7 +157,7 @@ class _GokuScreenState extends State<GokuScreen> {
             bottom: 35, // Ajusta la posición vertical aquí
             right: 24,
             child: Text(
-              'Version: 1.1.2',
+              'Version: 1.1.3',
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
