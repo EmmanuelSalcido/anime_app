@@ -1,9 +1,6 @@
 name: anime_app
 description: A new Flutter project.
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+publish_to: 'none'
 version: 1.0.0+1
 environment:
   sdk: '>=3.1.4 <4.0.0'
@@ -23,8 +20,9 @@ dependencies:
   cached_network_image: ^3.3.0
   just_audio: ^0.9.35
   translator: ^0.1.7
-  
+
 flutter:
+  uses-material-design: true # Agregamos esta línea
   assets:
     - assets/no-image.jpg
     - assets/goku.jpg
@@ -35,8 +33,5 @@ flutter:
     - assets/github.png
     - assets/gokugod.gif
     - assets/uiTheme.mp3
-    
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^2.0.0
+    #- packages/cupertino_icons/assets/CupertinoIcons.ttf # Agregamos estas líneas
+    #- packages/material_design_icons_flutter/fonts/MaterialIcons-Regular.ttf
