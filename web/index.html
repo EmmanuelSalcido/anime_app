@@ -31,29 +31,34 @@
 
   <title>anime_app</title>
   <link rel="manifest" href="manifest.json">
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    if (window.location.protocol == 'file:') {
+      alert("Debes abrir esta aplicación desde un servidor web local para que funcione correctamente.");
+    }
+  </script>
+  <base href="$FLUTTER_BASE_HREF">
   <script>
     // The value below is injected by flutter build, do not touch.
     const serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
-</head>
-<body>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+    // Load main.dart.js when the page is fully loaded
+    window.addEventListener('load', function() {
+      const script = document.createElement('script');
+      script.src = 'main.dart.js';
+      script.defer = true;
+      script.onload = function() {
+        // Initialize your Flutter app
+        runApp();
+      };
+      document.body.appendChild(script);
     });
   </script>
+</head>
+<body>
 </body>
 </html>
