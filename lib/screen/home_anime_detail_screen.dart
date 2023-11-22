@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:translator/translator.dart'; // Agrega esta importación
+import 'package:translator/translator.dart'; 
 
 class HomeAnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
@@ -16,7 +16,7 @@ class HomeAnimeDetailScreen extends StatefulWidget {
 class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
   late YoutubePlayerController _controller;
   bool isVideoVisible = false;
-  String translatedSynopsis = 'Cargando...'; // Sinopsis traducida
+  String translatedSynopsis = 'Cargando...'; 
 
   @override
   void initState() {
@@ -32,11 +32,11 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
       );
     }
 
-    // Traducción de la sinopsis
+    
     _translateSynopsis();
   }
 
-  // Función para traducir la sinopsis
+
   Future<void> _translateSynopsis() async {
     final translator = GoogleTranslator();
 
@@ -66,7 +66,7 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
     style: TextStyle(color: Colors.white),
   ),
   leading: IconButton(
-    icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
+    icon: Icon(MdiIcons.arrowLeft), 
     onPressed: () {
       Navigator.pop(context);
     },
@@ -77,7 +77,7 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Imagen del anime
+              
               if (imageUrl != null)
                 Image.network(imageUrl)
               else
@@ -85,7 +85,7 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Título del anime
+              
               Text(
                 widget.animeTitle,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -93,7 +93,7 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Ranking
+              
               Text(
                 'Ranking: $ranking',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -101,19 +101,19 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Sinopsis traducida
+            
               Text(
                 'Sinopsis:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
-                translatedSynopsis, // Mostrar la sinopsis traducida
+                translatedSynopsis, 
                 style: TextStyle(fontSize: 16),
               ),
 
               SizedBox(height: 16),
 
-              // Botón para ver u ocultar el video
+            
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -125,7 +125,7 @@ class _HomeAnimeDetailScreenState extends State<HomeAnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Reproductor de YouTube para el tráiler si está disponible
+             
               if (isVideoVisible)
                 YoutubePlayer(
                   controller: _controller,

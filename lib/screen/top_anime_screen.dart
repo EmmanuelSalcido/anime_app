@@ -42,7 +42,7 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, // Fondo negro en toda la barra del título
+        backgroundColor: Colors.black, 
         title: Center(
           child: Text(
             'Top Animes',

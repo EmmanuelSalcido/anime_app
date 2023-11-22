@@ -208,56 +208,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildRecentAnimes() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Animes de Temporada',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 160, // Ajusté la altura
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: recentAnimes.length,
-              itemBuilder: (context, index) {
-                final animeData = recentAnimes[index];
-                final imageUrl = animeData['images']['jpg']['large_image_url'];
+ Widget _buildRecentAnimes() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Animes de Temporada',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(
+        height: 160,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: recentAnimes.length,
+          itemBuilder: (context, index) {
+            final animeData = recentAnimes[index];
+            final imageUrl = animeData['images']['jpg']['large_image_url'];
 
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => HomeAnimeDetailScreen(
-                          animeTitle: animeData['title'],
-                          animeDetails: animeData,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(8),
-                    width: 80,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      width: 80,
-                      height: 160,
-                      fit: BoxFit.cover,
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomeAnimeDetailScreen(
+                      animeTitle: animeData['title'],
+                      animeDetails: animeData,
                     ),
                   ),
                 );
               },
-            ),
-          ),
-        ],
+              child: Container(
+                margin: EdgeInsets.all(8),
+                width: 80,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  width: 80,
+                  height: 160,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        ),
       ),
-    );
-  }
+    ],
+  );
+}
+
 
   Widget _buildTopAnimeScreen() {
     return TopAnimeScreen();

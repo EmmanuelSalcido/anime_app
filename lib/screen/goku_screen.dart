@@ -16,7 +16,7 @@ class _GokuScreenState extends State<GokuScreen> {
   void initState() {
     super.initState();
 
-    // Inicia la reproducción de audio al cargar la pantalla
+
     _startAudio();
   }
 
@@ -38,10 +38,10 @@ class _GokuScreenState extends State<GokuScreen> {
     });
   }
 
-  // Función para abrir el enlace a tu repositorio de GitHub
+ 
   Future<void> _launchRepositoryURL(BuildContext context) async {
     const url =
-        'https://github.com/EmmanuelSalcido/anime_app'; // Reemplaza con la URL de tu repositorio
+        'https://github.com/EmmanuelSalcido/anime_app'; 
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -90,20 +90,20 @@ class _GokuScreenState extends State<GokuScreen> {
             margin: EdgeInsets.all(8),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey.shade800, // Color gris oscuro
+              color: Colors.grey.shade800, 
             ),
             child: IconButton(
               icon: _isPlaying
-                  ? Image.asset('assets/mute.jpg') // Imagen de pausa
-                  : Image.asset('assets/play.jpg'), // Imagen de play
+                  ? Image.asset('assets/mute.jpg') 
+                  : Image.asset('assets/play.jpg'), 
               onPressed: _toggleAudio,
             ),
           ),
         ],
         leading: IconButton(
-          icon: Icon(MdiIcons.arrowLeft), // Cambia el ícono aquí
+          icon: Icon(MdiIcons.arrowLeft), 
           onPressed: () {
-            audioPlayer.stop(); // Detiene la música al salir de la pantalla
+            audioPlayer.stop(); 
             Navigator.of(context).pop();
           },
         ),
@@ -127,9 +127,9 @@ class _GokuScreenState extends State<GokuScreen> {
               ],
             ),
           ),
-          // Enlace al repositorio de GitHub (arriba del texto de la versión)
+          
           Positioned(
-            top: 585, // Ajusta la posición vertical aquí
+            top: 585, 
             right: 24,
             child: InkWell(
               onTap: () {
@@ -138,12 +138,12 @@ class _GokuScreenState extends State<GokuScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blue.withOpacity(0.7), // Color de fondo con opacidad
+                  color: Colors.blue.withOpacity(0.7), 
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Image.asset(
-                    'assets/github.png', // Reemplaza con la ruta de tu imagen de GitHub
+                    'assets/github.png',
                     width: 24,
                     height: 24,
                     color: Colors.white,
@@ -152,9 +152,9 @@ class _GokuScreenState extends State<GokuScreen> {
               ),
             ),
           ),
-          // Texto de la versión (parte inferior derecha)
+          
           Positioned(
-            bottom: 35, // Ajusta la posición vertical aquí
+            bottom: 35, 
             right: 24,
             child: Text(
               'Version: 1.1.3',

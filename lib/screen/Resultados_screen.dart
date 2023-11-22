@@ -12,16 +12,16 @@ class SearchResultsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56.0), // Altura de la AppBar personalizada
+        preferredSize: Size.fromHeight(56.0), 
         child: AppBar(
-          backgroundColor: Colors.black, // Fondo negro
+          backgroundColor: Colors.black, 
           leading: IconButton(
-            icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
+            icon: Icon(MdiIcons.arrowLeft), 
             onPressed: () {
-              Navigator.of(context).pop(); // Para regresar a la pantalla anterior
+              Navigator.of(context).pop(); 
             },
           ),
-          title: Text('Resultados De Busqueda'), // Cambia el título aquí
+          title: Text('Resultados De Busqueda'), 
         ),
       ),
       body: _buildSearchResults(context),
