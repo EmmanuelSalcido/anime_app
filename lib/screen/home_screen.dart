@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:anime_app/screen/explore_screen.dart';
-//import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
 import 'package:anime_app/screen/goku_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anime_app/screen/home_anime_detail_screen.dart';
+import 'package:anime_app/screen/CuentaDetails.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -112,6 +112,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.star, color: Colors.transparent),
             label: 'Top Animes',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.transparent),
+            label: 'Mi Cuenta',
+          ),
         ],
       ),
     );
@@ -125,6 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return ExploreScreen();
       case 2:
         return TopAnimeScreen();
+      case 3:
+        return MyAccountScreen();  // Tu pantalla de cuenta
       default:
         return Container();
     }
@@ -208,57 +214,52 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
- Widget _buildRecentAnimes() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Animes de Temporada',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+  Widget _buildRecentAnimes() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Animes de Temporada',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      SizedBox(
-        height: 160,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: recentAnimes.length,
-          itemBuilder: (context, index) {
-            final animeData = recentAnimes[index];
-            final imageUrl = animeData['images']['jpg']['large_image_url'];
+        SizedBox(
+          height: 160,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: recentAnimes.length,
+            itemBuilder: (context, index) {
+              final animeData = recentAnimes[index];
+              final imageUrl = animeData['images']['jpg']['large_image_url'];
 
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => HomeAnimeDetailScreen(
-                      animeTitle: animeData['title'],
-                      animeDetails: animeData,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => HomeAnimeDetailScreen(
+                        animeTitle: animeData['title'],
+                        animeDetails: animeData,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.all(8),
-                width: 80,
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.all(8),
                   width: 80,
-                  height: 160,
-                  fit: BoxFit.cover,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    width: 80,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    ],
-  );
-}
-
-
-  Widget _buildTopAnimeScreen() {
-    return TopAnimeScreen();
+      ],
+    );
   }
 }
