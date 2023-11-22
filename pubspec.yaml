@@ -21,6 +21,11 @@ dependencies:
   just_audio: ^0.9.35
   translator: ^0.1.7
   firebase_auth: ^4.14.1
+  provider: ^6.0.5
+  flutter_secure_storage: ^9.0.0
+  firebase_core: ^2.23.0
+  pigeon: ^14.0.0
+  cloud_firestore: ^4.13.2
 
 flutter:
   uses-material-design: true # Agregamos esta línea
