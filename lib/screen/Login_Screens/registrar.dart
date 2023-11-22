@@ -1,4 +1,4 @@
-import 'package:anime_app/providers/auth_provider.dart';
+
 import 'package:anime_app/screen/Login_Screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_app/providers/auth_provider.dart' as MyAppAuthProvider;

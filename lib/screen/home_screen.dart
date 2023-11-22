@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:anime_app/screen/explore_screen.dart';
-import 'package:anime_app/screen/anime_detail_screen.dart';
+//import 'package:anime_app/screen/anime_detail_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
 import 'package:anime_app/screen/goku_screen.dart';
 import 'package:http/http.dart' as http;
