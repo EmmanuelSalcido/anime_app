@@ -42,7 +42,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       final jsonData = json.decode(response.body);
       final searchResults = jsonData['data'];
 
-      // Navegar a la pantalla de resultados con los resultados de la búsqueda
+      
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SearchResultsScreen(searchResults: searchResults),
@@ -60,23 +60,23 @@ class _ExploreScreenState extends State<ExploreScreen> {
       itemBuilder: (context, index) {
         final animeData = upcomingAnimeList[index];
         final imageUrl = animeData['images']['jpg']['large_image_url'];
-        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible'; // Manejo de sinopsis nula
+        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible'; 
 
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ExploreDetailScreen(
-                  animeTitle: animeData['title'], // Título del anime
-                  imageUrl: imageUrl, // URL de la imagen
-                  synopsis: synopsis, // Sinopsis del anime
-                  trailerUrl: animeData['trailer_url'], // URL del trailer
+                  animeTitle: animeData['title'], 
+                  imageUrl: imageUrl, 
+                  synopsis: synopsis, 
+                  trailerUrl: animeData['trailer_url'], 
                 ),
               ),
             );
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0), // Agregar un espacio de 8 puntos alrededor de cada imagen
+            padding: const EdgeInsets.all(8.0),
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
@@ -97,29 +97,29 @@ class _ExploreScreenState extends State<ExploreScreen> {
       ),
       body: Column(
         children: [
-          // Sección de búsqueda
+          
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
                 labelText: 'Buscar animes...',
-                // Quitar el icono por completo
+                
                 prefixIcon: null,
                 border: OutlineInputBorder(),
               ),
               onSubmitted: (query) {
-                // Realizar la búsqueda cuando el usuario presiona Enter
+                
                 searchAnime(query);
               },
             ),
           ),
-          // Encabezado "Próximamente"
+          
           Text(
             'Próximamente',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          // Sección "Próximamente"
+          
           Expanded(child: _buildUpcomingAnimeSection()),
         ],
       ),

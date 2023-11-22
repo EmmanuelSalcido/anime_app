@@ -29,17 +29,16 @@ class ForgotPasswordScreen extends StatelessWidget {
                   await Provider.of<AuthProvider>(context, listen: false)
                       .sendPasswordResetEmail(_emailController.text);
 
-                  // Muestra un SnackBar indicando que el correo se envió correctamente
+                
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Correo de restablecimiento enviado. Revisa tu bandeja de entrada.'),
                     ),
                   );
 
-                  // Regresa a la pantalla de inicio de sesión
                   Navigator.pop(context);
                 } catch (e) {
-                  // Manejo de errores: Muestra un SnackBar con el mensaje de error
+                 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Error al enviar el correo de restablecimiento: $e'),

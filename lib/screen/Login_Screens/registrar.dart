@@ -53,21 +53,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _passwordController.text,
                   );
 
-                  // Redirige al usuario a la pantalla de inicio de sesión
+             
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => LoginScreen(),
                     ),
                   );
                 } on FirebaseAuthException catch (e) {
-                  // Manejo de excepciones específicas de FirebaseAuth
+                 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Error durante el registro: ${e.message}'),
                     ),
                   );
                 } catch (e) {
-                  // Manejo de errores generales
+                 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Error durante el registro: $e'),

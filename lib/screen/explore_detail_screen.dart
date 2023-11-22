@@ -49,31 +49,31 @@ class _ExploreDetailScreenState extends State<ExploreDetailScreen> {
     return Scaffold(
       appBar: AppBar(
   leading: IconButton(
-    icon: Icon(MdiIcons.arrowLeft), // Icono personalizado de flecha
+    icon: Icon(MdiIcons.arrowLeft),
     onPressed: () {
       Navigator.pop(context);
     },
   ),
-  title: Text('ProyectoAnimeApi'), // Cambia el título aquí
+  title: Text('ProyectoAnimeApi'),
   backgroundColor: Colors.black,
 ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Título del anime
+           
             Text(
               widget.animeTitle,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
-            // Imagen del anime
+           
             if (widget.imageUrl != null)
               Image.network(widget.imageUrl!)
             else
               Container(),
 
-            // Sinopsis del anime
+           
             FutureBuilder(
               future: _translateSynopsis(widget.synopsis),
               builder: (context, snapshot) {

@@ -25,7 +25,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       _controller = YoutubePlayerController(
         initialVideoId: YoutubePlayer.convertUrlToId(embedUrl)!,
         flags: YoutubePlayerFlags(
-          autoPlay: false, // No se reproduce automáticamente
+          autoPlay: false, 
           mute: false,
         ),
       );
@@ -48,12 +48,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white, // Color del texto en la barra
+            color: Colors.white, 
           ),
         ),
-        backgroundColor: Colors.black, // Color de fondo de la barra
+        backgroundColor: Colors.black, 
         leading: IconButton(
-          icon: Icon(MdiIcons.arrowLeft), // Icono de flecha para regresar
+          icon: Icon(MdiIcons.arrowLeft), 
           onPressed: () {
             Navigator.pop(context);
           },
@@ -64,15 +64,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Imagen del anime
+            
               if (imageUrl != null)
                 Image.network(imageUrl)
               else
-                Container(), // Puedes personalizar esto si la imagen no está disponible
+                Container(), 
 
               SizedBox(height: 16),
 
-              // Sinopsis
+             
               Text(
                 widget.animeTitle,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -85,7 +85,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
 
               SizedBox(height: 16),
 
-              // Video del trailer del anime o mensaje de error
+              
               if (videoError.isNotEmpty)
                 Center(
                   child: Text(
