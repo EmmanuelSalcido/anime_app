@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:anime_app/providers/auth_provider.dart';
+import 'anime_detail_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MyAccountScreen extends StatelessWidget {
   @override
@@ -11,15 +14,24 @@ class MyAccountScreen extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: Container(
-        color: Colors.black,
+        color: Colors.white,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProfileSection(context),
             SizedBox(height: 16),
-            _buildFavoritesSection(context),
-            SizedBox(height: 16),
+            Text(
+              'Animes Favoritos',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 8),
+            _buildFavoritesList(context),
+            Spacer(),
             _buildLogoutButton(context),
           ],
         ),
@@ -38,7 +50,7 @@ class MyAccountScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         SizedBox(height: 8),
@@ -61,7 +73,7 @@ class MyAccountScreen extends StatelessWidget {
               currentNick ?? 'Sin Nick',
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
           ],
@@ -70,68 +82,89 @@ class MyAccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFavoritesSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Animes Favoritos',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: 8),
-        _buildFavoritesList(context), // Agregado: Lista de animes favoritos
-      ],
-    );
-  }
-
   Widget _buildFavoritesList(BuildContext context) {
-  return FutureBuilder<List<String>>(
-    future: Provider.of<AuthProvider>(context).getFavoriteAnimes(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        // Muestra un indicador de carga mientras se espera la lista de favoritos
-        return CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        // Muestra un mensaje de error si hay un problema al obtener la lista
-        return Text('Error al obtener la lista de animes favoritos.');
-      } else {
-        // Se obtuvo la lista de favoritos, muestra los elementos
-        List<String> favoriteAnimes = snapshot.data ?? [];
-        return _buildFavoritesListContent(favoriteAnimes);
-      }
-    },
-  );
-}
+    return Expanded(
+      child: FutureBuilder<List<String>>(
+        future: Provider.of<AuthProvider>(context).getFavoriteAnimes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            List<String> favoriteAnimes = snapshot.data ?? [];
 
-Widget _buildFavoritesListContent(List<String> favoriteAnimes) {
-  if (favoriteAnimes.isEmpty) {
-    return Text(
-      'No tienes animes favoritos.',
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
+            // Dividir el conjunto de imágenes en filas de tres
+            List<List<String>> rowsOfAnimeIds = [];
+            for (int i = 0; i < favoriteAnimes.length; i += 3) {
+              int endIndex = i + 3;
+              if (endIndex > favoriteAnimes.length) {
+                endIndex = favoriteAnimes.length;
+              }
+              rowsOfAnimeIds.add(favoriteAnimes.sublist(i, endIndex));
+            }
+
+            return ListView.builder(
+              itemCount: rowsOfAnimeIds.length,
+              itemBuilder: (context, index) {
+                return _buildRowOfAnimeWidgets(context, rowsOfAnimeIds[index]);
+              },
+            );
+          }
+        },
       ),
     );
   }
 
-  return Column(
-    children: favoriteAnimes.map((animeId) {
-      // Puedes personalizar la visualización de cada anime favorito aquí
-      // Por ahora, solo muestro el ID como ejemplo
-      return Text(
-        'Anime ID: $animeId',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.white,
-        ),
-      );
-    }).toList(),
-  );
-}
+  Widget _buildRowOfAnimeWidgets(BuildContext context, List<String> animeIds) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: animeIds.map((animeId) => _buildAnimeWidget(context, animeId)).toList(),
+    );
+  }
+
+  Widget _buildAnimeWidget(BuildContext context, String animeId) {
+    return Container(
+      margin: EdgeInsets.all(4), // Ajusta el margen según tus necesidades
+      child: _buildAnimeImage(context, animeId),
+    );
+  }
+
+  Widget _buildAnimeImage(BuildContext context, String animeId) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _getAnimeDetailsFromAPI(animeId),
+      builder: (context, animeSnapshot) {
+        if (animeSnapshot.connectionState == ConnectionState.waiting) {
+          return _buildPlaceholder();
+        } else if (animeSnapshot.hasError) {
+          return _buildPlaceholder();
+        } else {
+          Map<String, dynamic> animeDetails = animeSnapshot.data ?? {};
+          return GestureDetector(
+            onTap: () {
+              _navigateToAnimeDetail(context, animeDetails);
+            },
+            child: _buildAnimeImageWidget(animeDetails),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildAnimeImageWidget(Map<String, dynamic> animeDetails) {
+    String imageUrl = animeDetails['images']?['jpg']?['large_image_url'] ?? '';
+    return imageUrl.isNotEmpty
+        ? Image.network(imageUrl, fit: BoxFit.cover, width: 100, height: 100)
+        : _buildPlaceholder();
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: Colors.grey,
+      width: 100,
+      height: 100,
+    );
+  }
 
   Widget _buildLogoutButton(BuildContext context) {
     return ElevatedButton(
@@ -139,10 +172,54 @@ Widget _buildFavoritesListContent(List<String> favoriteAnimes) {
         await Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
       },
-      child: Text(
+      child:   Text(
         'Cerrar Sesión',
         style: TextStyle(fontSize: 18),
       ),
     );
+  }
+
+  void _navigateToAnimeDetail(BuildContext context, Map<String, dynamic> animeDetails) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            AnimeDetailScreen(
+              animeTitle: animeDetails['title'] ?? 'Sin Título',
+              animeDetails: animeDetails,
+            ),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOutCubic;
+          var tween = Tween(begin: begin, end: end)
+              .chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> _getAnimeDetailsFromAPI(String animeName) async {
+    final response = await http.get(
+      Uri.parse('https://api.jikan.moe/v4/anime?q=$animeName'),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final animeList = jsonData['data'].cast<Map<String, dynamic>>();
+
+      if (animeList.isNotEmpty) {
+        return animeList[0];
+      } else {
+        throw Exception('No se encontraron detalles para el anime: $animeName');
+      }
+    } else {
+      throw Exception('Error al obtener detalles del anime desde la API');
+    }
   }
 }

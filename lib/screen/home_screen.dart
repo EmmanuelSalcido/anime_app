@@ -89,38 +89,41 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: _buildScreen(_currentIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.transparent),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore, color: Colors.transparent),
-            label: 'Explorar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star, color: Colors.transparent),
-            label: 'Top Animes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.transparent),
-            label: 'Mi Cuenta',
-          ),
-        ],
-      ),
+     bottomNavigationBar: BottomNavigationBar(
+  backgroundColor: Colors.black,
+  selectedItemColor: Colors.blue,
+  unselectedItemColor: Colors.grey,
+  currentIndex: _currentIndex,
+  onTap: (index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  },
+  elevation: 0,  // Añade esta línea para quitar la sombra
+  type: BottomNavigationBarType.fixed,  // Añade esta línea para mostrar siempre el texto
+  items: [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.explore),
+      label: 'Explorar',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.star),
+      label: 'Top Animes',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Mi Cuenta',
+    ),
+  ],
+),
+
+
     );
   }
-
   Widget _buildScreen(int index) {
     switch (index) {
       case 0:

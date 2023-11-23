@@ -48,7 +48,7 @@ class AuthProvider extends ChangeNotifier {
   // Actualizar la información del usuario en Firestore
   Future<void> _updateUserInfo(String uid, String nick) async {
     try {
-      // Inicializar el campo "favoriteAnimes" como una lista vacía
+      // Actualizar el campo "nick" en Firestore
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'nick': nick,
         'uid': uid,
@@ -117,7 +117,7 @@ class AuthProvider extends ChangeNotifier {
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
 
         // Obtener la lista de animes favoritos del usuario
-        List<dynamic> favoriteAnimes = List<dynamic>.from((await userRef.get())['favoriteAnimes']);
+        List<String> favoriteAnimes = List<String>.from((await userRef.get())['favoriteAnimes']);
 
         // Verificar si el anime ya está en la lista
         if (favoriteAnimes.contains(animeId)) {
@@ -147,10 +147,11 @@ class AuthProvider extends ChangeNotifier {
           return List<String>.from(userDoc['favoriteAnimes']);
         }
       }
-      return [];
+      return []; // Devuelve una lista vacía si no hay animes favoritos o hay algún error
     } catch (error) {
       print(error.toString());
       throw error;
     }
   }
+
 }
