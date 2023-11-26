@@ -1,8 +1,7 @@
-import 'package:anime_app/screen/Resultados_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:anime_app/screen/explore_detail_screen.dart';
+import 'dart:convert';
+import 'package:anime_app/screen/Screen%20Details/anime_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -42,7 +41,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
       final jsonData = json.decode(response.body);
       final searchResults = jsonData['data'];
 
-      
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SearchResultsScreen(searchResults: searchResults),
@@ -60,17 +58,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
       itemBuilder: (context, index) {
         final animeData = upcomingAnimeList[index];
         final imageUrl = animeData['images']['jpg']['large_image_url'];
-        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible'; 
+        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible';
 
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ExploreDetailScreen(
-                  animeTitle: animeData['title'], 
-                  imageUrl: imageUrl, 
-                  synopsis: synopsis, 
-                  trailerUrl: animeData['trailer_url'], 
+                builder: (context) => AnimeDetailScreen(
+                  animeTitle: animeData['title'],
+                  animeDetails: {
+                    'images': {'jpg': {'large_image_url': imageUrl}},
+                    'synopsis': synopsis,
+                    'trailer': {'embed_url': animeData['trailer_url']},
+                  },
                 ),
               ),
             );
@@ -91,38 +91,78 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Explorar'),
+        title: Text(
+          'Explorar',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
       body: Column(
         children: [
-          
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
                 labelText: 'Buscar animes...',
-                
                 prefixIcon: null,
                 border: OutlineInputBorder(),
               ),
               onSubmitted: (query) {
-                
                 searchAnime(query);
               },
             ),
           ),
-          
           Text(
             'Próximamente',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          
           Expanded(child: _buildUpcomingAnimeSection()),
         ],
       ),
     );
   }
 }
+
+class SearchResultsScreen extends StatelessWidget {
+  final List<dynamic> searchResults;
+
+  SearchResultsScreen({required this.searchResults});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Resultados de búsqueda'),
+      ),
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 4.0,
+          mainAxisSpacing: 4.0,
+        ),
+        itemCount: searchResults.length,
+        itemBuilder: (context, index) {
+          final resultData = searchResults[index];
+          final imageUrl = resultData['images']['jpg']['large_image_url'];
+
+          return GestureDetector(
+            onTap: () {
+              // Navigate to AnimeDetailScreen or perform any other action
+            },
+            child: Card(
+              elevation: 4.0,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+

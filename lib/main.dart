@@ -1,6 +1,7 @@
 import 'package:anime_app/firebase_options.dart';
 import 'package:anime_app/providers/auth_provider.dart';
 import 'package:anime_app/screen/Login_Screens/login.dart';
+import 'package:anime_app/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      //home: HomeScreen(),
       home: LoginScreen(),
       routes: {
         '/login': (context) => LoginScreen(),

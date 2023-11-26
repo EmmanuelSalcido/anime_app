@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:anime_app/providers/auth_provider.dart';
-import 'anime_detail_screen.dart';
+import 'Screen Details/anime_detail_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MyAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi Cuenta'),
+        automaticallyImplyLeading: false, // Esto oculta la flecha de retroceso
+        title: Row(
+          children: [
+            Text(
+              'Mi Cuenta',
+              style: TextStyle(
+                color: Colors.white, // Puedes cambiar el color del texto según tu diseño
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.black,
       ),
       body: Container(
@@ -93,7 +104,6 @@ class MyAccountScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<String> favoriteAnimes = snapshot.data ?? [];
-
             // Dividir el conjunto de imágenes en filas de tres
             List<List<String>> rowsOfAnimeIds = [];
             for (int i = 0; i < favoriteAnimes.length; i += 3) {
@@ -117,15 +127,14 @@ class MyAccountScreen extends StatelessWidget {
   }
 
   Widget _buildRowOfAnimeWidgets(BuildContext context, List<String> animeIds) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: animeIds.map((animeId) => _buildAnimeWidget(context, animeId)).toList(),
     );
   }
 
   Widget _buildAnimeWidget(BuildContext context, String animeId) {
     return Container(
-      margin: EdgeInsets.all(4), // Ajusta el margen según tus necesidades
+      margin: EdgeInsets.only(bottom: 8), // Ajusta el margen según tus necesidades
       child: _buildAnimeImage(context, animeId),
     );
   }
@@ -154,15 +163,20 @@ class MyAccountScreen extends StatelessWidget {
   Widget _buildAnimeImageWidget(Map<String, dynamic> animeDetails) {
     String imageUrl = animeDetails['images']?['jpg']?['large_image_url'] ?? '';
     return imageUrl.isNotEmpty
-        ? Image.network(imageUrl, fit: BoxFit.cover, width: 100, height: 100)
+        ? CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 100,
+          )
         : _buildPlaceholder();
   }
 
   Widget _buildPlaceholder() {
     return Container(
       color: Colors.grey,
-      width: 100,
       height: 100,
+      width: double.infinity,
     );
   }
 
@@ -172,7 +186,7 @@ class MyAccountScreen extends StatelessWidget {
         await Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
       },
-      child:   Text(
+      child: Text(
         'Cerrar Sesión',
         style: TextStyle(fontSize: 18),
       ),

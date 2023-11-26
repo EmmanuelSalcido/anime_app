@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:anime_app/screen/anime_detail_screen.dart';
+import 'package:anime_app/screen/Screen%20Details/anime_detail_screen.dart';
 import 'package:translator/translator.dart';
 
 class TopAnimeScreen extends StatefulWidget {

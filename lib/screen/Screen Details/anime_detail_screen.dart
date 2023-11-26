@@ -3,6 +3,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:anime_app/providers/auth_provider.dart';
+import 'package:translator/translator.dart';
 
 class AnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
@@ -19,6 +20,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   String videoError = '';
   bool isVideoVisible = false;
   bool isFavorite = false;
+  String translatedSynopsis = 'Loading...';
+  String ranking = 'N/A';
 
   @override
   void initState() {
@@ -34,27 +37,56 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       );
     } else {
       setState(() {
-        videoError = 'No se encontró la fuente del video.';
+        videoError = 'Video source not found.';
       });
     }
 
-    // Verificar si el anime actual está en la lista de favoritos
+    _translateSynopsis();
+    _extractRanking();
     _checkFavoriteStatus();
   }
 
-  // Nuevo: Método para verificar el estado de favoritos al cargar la pantalla
+  Future<void> _translateSynopsis() async {
+    final translator = GoogleTranslator();
+
+    final originalSynopsis = widget.animeDetails?['synopsis'];
+    if (originalSynopsis != null) {
+      final translation = await translator.translate(originalSynopsis, from: 'en', to: 'es');
+      setState(() {
+        translatedSynopsis = translation.text;
+      });
+    } else {
+      setState(() {
+        translatedSynopsis = 'No synopsis available';
+      });
+    }
+  }
+
+  void _extractRanking() {
+    final rank = widget.animeDetails?['rank'];
+    if (rank != null) {
+      setState(() {
+        ranking = rank.toString();
+      });
+    } else {
+      setState(() {
+        ranking = 'N/A';
+      });
+    }
+  }
+
   void _checkFavoriteStatus() async {
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     List<String> favoriteAnimes = await authProvider.getFavoriteAnimes();
     setState(() {
-      isFavorite = favoriteAnimes.contains(widget.animeTitle); // Cambia a tu lógica de identificación del anime
+      isFavorite = favoriteAnimes.contains(widget.animeTitle);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.animeDetails?['images']?['jpg']?['large_image_url'];
-    final synopsis = widget.animeDetails?['synopsis'];
+    //final synopsis = widget.animeDetails?['synopsis'];
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +106,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           },
         ),
         actions: [
-          // Nuevo: Botón de Favoritos
           IconButton(
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -99,7 +130,16 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               ),
               SizedBox(height: 16),
               Text(
-                synopsis ?? 'Sin sinopsis disponible',
+                'Ranking: $ranking',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Synopsis:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                translatedSynopsis,
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
@@ -118,7 +158,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                             isVideoVisible = true;
                           });
                         },
-                        child: Text('Ver Trailer'),
+                        child: Text('Watch Trailer'),
                       )
                     : YoutubePlayer(
                         controller: _controller,
@@ -131,18 +171,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     );
   }
 
-  // Nuevo: Método para agregar/quitar de favoritos
   void _toggleFavoriteStatus() async {
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     try {
-      // Toggle the favorite status
       await authProvider.toggleFavoriteAnime(widget.animeTitle);
-
-      // Actualizar el estado local de favoritos
       _checkFavoriteStatus();
     } catch (error) {
       print(error.toString());
-      // Manejar el error, si es necesario
     }
   }
 

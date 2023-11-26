@@ -1,3 +1,4 @@
+import 'package:anime_app/screen/Screen%20Details/anime_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_app/screen/explore_screen.dart';
 import 'package:anime_app/screen/top_anime_screen.dart';
@@ -5,8 +6,7 @@ import 'package:anime_app/screen/goku_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:anime_app/screen/home_anime_detail_screen.dart';
-import 'package:anime_app/screen/CuentaDetails.dart';
+import 'package:anime_app/screen/Cuenta_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HomeAnimeDetailScreen(
+                      builder: (context) => AnimeDetailScreen(
                         animeTitle: animeData['title'],
                         animeDetails: animeData,
                       ),
@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HomeAnimeDetailScreen(
+                      builder: (context) => AnimeDetailScreen(
                         animeTitle: animeData['title'],
                         animeDetails: animeData,
                       ),
