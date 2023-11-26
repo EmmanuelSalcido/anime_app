@@ -10,20 +10,19 @@ class MyAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Esto oculta la flecha de retroceso
-        title: Row(
-          children: [
-            Text(
-              'Mi Cuenta',
-              style: TextStyle(
-                color: Colors.white, // Puedes cambiar el color del texto según tu diseño
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.black,
+   appBar: AppBar(
+  automaticallyImplyLeading: false,
+  title: Center(
+    child: Text(
+      'Mi Cuenta',
+      style: TextStyle(
+        color: Colors.white,
       ),
+    ),
+  ),
+  backgroundColor: Colors.black,
+),
+
       body: Container(
         color: Colors.white,
         padding: const EdgeInsets.all(16.0),
@@ -32,17 +31,23 @@ class MyAccountScreen extends StatelessWidget {
           children: [
             _buildProfileSection(context),
             SizedBox(height: 16),
-            Text(
-              'Animes Favoritos',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Animes Favoritos',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  _buildFavoritesList(context),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            _buildFavoritesList(context),
-            Spacer(),
             _buildLogoutButton(context),
           ],
         ),
@@ -104,20 +109,16 @@ class MyAccountScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<String> favoriteAnimes = snapshot.data ?? [];
-            // Dividir el conjunto de imágenes en filas de tres
-            List<List<String>> rowsOfAnimeIds = [];
-            for (int i = 0; i < favoriteAnimes.length; i += 3) {
-              int endIndex = i + 3;
-              if (endIndex > favoriteAnimes.length) {
-                endIndex = favoriteAnimes.length;
-              }
-              rowsOfAnimeIds.add(favoriteAnimes.sublist(i, endIndex));
-            }
 
-            return ListView.builder(
-              itemCount: rowsOfAnimeIds.length,
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+              ),
+              itemCount: favoriteAnimes.length,
               itemBuilder: (context, index) {
-                return _buildRowOfAnimeWidgets(context, rowsOfAnimeIds[index]);
+                return _buildAnimeWidget(context, favoriteAnimes[index]);
               },
             );
           }
@@ -126,15 +127,9 @@ class MyAccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRowOfAnimeWidgets(BuildContext context, List<String> animeIds) {
-    return Column(
-      children: animeIds.map((animeId) => _buildAnimeWidget(context, animeId)).toList(),
-    );
-  }
-
   Widget _buildAnimeWidget(BuildContext context, String animeId) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8), // Ajusta el margen según tus necesidades
+      margin: EdgeInsets.only(bottom: 8),
       child: _buildAnimeImage(context, animeId),
     );
   }
@@ -167,7 +162,7 @@ class MyAccountScreen extends StatelessWidget {
             imageUrl: imageUrl,
             fit: BoxFit.cover,
             width: double.infinity,
-            height: 100,
+            height: 200,
           )
         : _buildPlaceholder();
   }
@@ -175,13 +170,14 @@ class MyAccountScreen extends StatelessWidget {
   Widget _buildPlaceholder() {
     return Container(
       color: Colors.grey,
-      height: 100,
+      height: 200,
       width: double.infinity,
     );
   }
 
   Widget _buildLogoutButton(BuildContext context) {
-    return ElevatedButton(
+  return Center(
+    child: ElevatedButton(
       onPressed: () async {
         await Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
@@ -190,8 +186,10 @@ class MyAccountScreen extends StatelessWidget {
         'Cerrar Sesión',
         style: TextStyle(fontSize: 18),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void _navigateToAnimeDetail(BuildContext context, Map<String, dynamic> animeDetails) {
     Navigator.of(context).push(

@@ -55,10 +55,6 @@ class SearchResultsScreen extends StatelessWidget {
     ),
   ),
 );
-
-
-
-
       },
     );
   }
