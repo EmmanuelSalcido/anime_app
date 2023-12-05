@@ -157,7 +157,7 @@ class _GokuScreenState extends State<GokuScreen> {
             bottom: 35, 
             right: 24,
             child: Text(
-              'Version: 1.2.7',
+              'Version: 1.2.9',
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
