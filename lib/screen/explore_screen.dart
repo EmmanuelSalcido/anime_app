@@ -134,7 +134,11 @@ class SearchResultsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resultados de búsqueda'),
+        title: Text(
+          'Resultados de búsqueda',
+          style: TextStyle(color: Colors.white), 
+        ),
+        backgroundColor: Colors.black,
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -149,8 +153,19 @@ class SearchResultsScreen extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              // Navigate to AnimeDetailScreen or perform any other action
-            },
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => AnimeDetailScreen(
+        animeTitle: resultData['title'],
+        animeDetails: {
+          'images': {'jpg': {'large_image_url': imageUrl}},
+          'synopsis': resultData['synopsis'] ?? 'Sin sinopsis disponible',
+          'trailer': {'embed_url': resultData['trailer_url']},
+        },
+      ),
+    ),
+  );
+},
             child: Card(
               elevation: 4.0,
               child: Image.network(

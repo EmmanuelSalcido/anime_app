@@ -38,11 +38,13 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
     fetchTopAnimes();
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final itemCount = topAnimeList.length > 25 ? 25 : topAnimeList.length;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, // Fondo negro en toda la barra del título
+        backgroundColor: Colors.black, 
         title: Center(
           child: Text(
             'Top Animes',
@@ -51,7 +53,7 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: topAnimeList.length,
+        itemCount: itemCount, 
         itemBuilder: (context, index) {
           final animeData = topAnimeList[index];
           final animeTitle = animeData['title'];
@@ -71,7 +73,7 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
                 : Image.asset('assets/placeholder.png'),
             onTap: () async {
               final translatedSynopsis = await _translateSynopsis(englishSynopsis);
-              animeData['synopsis'] = translatedSynopsis; // Actualiza la sinopsis traducida
+              animeData['synopsis'] = translatedSynopsis; 
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AnimeDetailScreen(

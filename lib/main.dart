@@ -5,6 +5,7 @@ import 'package:anime_app/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:anime_app/screen/explore_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       //home: HomeScreen(),
       home: LoginScreen(),
+      //home: ExploreScreen(),
       routes: {
         '/login': (context) => LoginScreen(),
       },

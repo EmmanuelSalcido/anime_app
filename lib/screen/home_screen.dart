@@ -99,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _currentIndex = index;
     });
   },
-  elevation: 0,  // Añade esta línea para quitar la sombra
-  type: BottomNavigationBarType.fixed,  // Añade esta línea para mostrar siempre el texto
+  elevation: 0,  
+  type: BottomNavigationBarType.fixed,  
   items: [
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return TopAnimeScreen();
       case 3:
-        return MyAccountScreen();  // Tu pantalla de cuenta
+        return MyAccountScreen();  
       default:
         return Container();
     }
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         SizedBox(height: 8),
         Container(
-          height: 160, // Ajusté la altura
+          height: 160, 
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: scheduleAnimes.length,

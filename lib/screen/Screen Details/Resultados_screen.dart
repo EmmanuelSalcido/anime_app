@@ -9,8 +9,18 @@ class SearchResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Resultados de búsqueda'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56.0),
+        child: AppBar(
+          backgroundColor: Colors.black,
+          title: Text('Resultados de Búsqueda'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
       ),
       body: _buildSearchResults(context),
     );
@@ -20,41 +30,27 @@ class SearchResultsScreen extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 4.0,
-        mainAxisSpacing: 4.0,
       ),
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
-        final resultData = searchResults[index];
-        final imageUrl = resultData['images']['jpg']['large_image_url'];
-        final animeTitle = resultData['title'];
+        final animeData = searchResults[index];
+        final animeTitle = animeData['title'];
+        final animeDetails = animeData; 
 
-  return GestureDetector(
-  onTap: () {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => AnimeDetailScreen(
-          animeTitle: animeTitle,
-          animeDetails: {
-            'images': {'jpg': {'large_image_url': imageUrl}},
-            'trailer': {'embed_url': ''},
-            'synopsis': '',
-            'rank': resultData['rank'],
+        return GestureDetector(
+          onTap: () {
+            print('Clic en la imagen de $animeTitle'); 
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AnimeDetailScreen(
+                  animeTitle: animeTitle,
+                  animeDetails: animeDetails,
+                ),
+              ),
+            );
           },
-        ),
-      ),
-    );
-  },
-  child: Material(
-    child: Card(
-      elevation: 4.0,
-      child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-      ),
-    ),
-  ),
-);
+          child: Image.network(animeDetails['images']['jpg']['large_image_url']),
+        );
       },
     );
   }

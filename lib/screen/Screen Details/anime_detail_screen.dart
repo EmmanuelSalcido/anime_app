@@ -37,7 +37,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       );
     } else {
       setState(() {
-        videoError = 'Video source not found.';
+        videoError = 'Trailer no disponble.';
       });
     }
 
@@ -57,7 +57,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       });
     } else {
       setState(() {
-        translatedSynopsis = 'No synopsis available';
+        translatedSynopsis = 'Sin synopsis';
       });
     }
   }
@@ -158,7 +158,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                             isVideoVisible = true;
                           });
                         },
-                        child: Text('Watch Trailer'),
+                        child: Text('Ver Trailer'),
                       )
                     : YoutubePlayer(
                         controller: _controller,
