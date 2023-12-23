@@ -141,6 +141,37 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  // New "Continue without account" button
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    },
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return LinearGradient(
+                          colors: [Colors.purpleAccent, Colors.cyan],
+                        ).createShader(bounds);
+                      },
+                      child: Text(
+                        'Continue without account',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+
+                  // Message indicating the app may not function correctly
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Note: The app may not function correctly without an account.',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 ],
               ),
             ),
