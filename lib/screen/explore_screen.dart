@@ -50,42 +50,44 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _buildUpcomingAnimeSection() {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-      ),
-      itemCount: upcomingAnimeList.length,
-      itemBuilder: (context, index) {
-        final animeData = upcomingAnimeList[index];
-        final imageUrl = animeData['images']['jpg']['large_image_url'];
-        final synopsis = animeData['synopsis'] ?? 'Sin sinopsis disponible';
+  return GridView.builder(
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 3,
+    ),
+    itemCount: upcomingAnimeList.length,
+    itemBuilder: (context, index) {
+      final animeData = upcomingAnimeList[index];
+      final imageUrl = animeData['images']['jpg']['large_image_url'];
+      // No necesitas la fecha en la pantalla de exploración
 
-        return GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AnimeDetailScreen(
-                  animeTitle: animeData['title'],
-                  animeDetails: {
-                    'images': {'jpg': {'large_image_url': imageUrl}},
-                    'synopsis': synopsis,
-                    'trailer': {'embed_url': animeData['trailer_url']},
-                  },
-                ),
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AnimeDetailScreen(
+                animeTitle: animeData['title'],
+                animeDetails: {
+                  'images': {'jpg': {'large_image_url': imageUrl}},
+                  'synopsis': animeData['synopsis'] ?? 'Sin sinopsis disponible',
+                  'trailer': {'embed_url': animeData['trailer_url']},
+                  'aired': {'from': animeData['aired']?['from']},
+                },
               ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
             ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +138,7 @@ class SearchResultsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Resultados de búsqueda',
-          style: TextStyle(color: Colors.white), 
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
       ),
@@ -150,27 +152,41 @@ class SearchResultsScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final resultData = searchResults[index];
           final imageUrl = resultData['images']['jpg']['large_image_url'];
+          final startDate = resultData['aired']?['from'];
 
           return GestureDetector(
             onTap: () {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => AnimeDetailScreen(
-        animeTitle: resultData['title'],
-        animeDetails: {
-          'images': {'jpg': {'large_image_url': imageUrl}},
-          'synopsis': resultData['synopsis'] ?? 'Sin sinopsis disponible',
-          'trailer': {'embed_url': resultData['trailer_url']},
-        },
-      ),
-    ),
-  );
-},
-            child: Card(
-              elevation: 4.0,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AnimeDetailScreen(
+                    animeTitle: resultData['title'],
+                    animeDetails: {
+                      'images': {'jpg': {'large_image_url': imageUrl}},
+                      'trailer': {'embed_url': resultData['trailer_url']},
+                      'aired': {'from': startDate},
+                    },
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    resultData['title'],
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 4),
+                  // Usa el widget AnimeReleaseDate
+                  AnimeReleaseDate(startDate: startDate),
+                ],
               ),
             ),
           );
@@ -179,5 +195,3 @@ class SearchResultsScreen extends StatelessWidget {
     );
   }
 }
-
-

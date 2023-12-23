@@ -5,6 +5,82 @@ import 'package:provider/provider.dart';
 import 'package:anime_app/providers/auth_provider.dart';
 import 'package:translator/translator.dart';
 
+class AnimeReleaseDate extends StatelessWidget {
+  final String? startDate;
+
+  AnimeReleaseDate({required this.startDate});
+
+  @override
+  Widget build(BuildContext context) {
+    final formattedDate =
+        startDate != null ? _formatReleaseDate(startDate!) : 'N/A';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: RichText(
+        text: TextSpan(
+          style: DefaultTextStyle.of(context).style,
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Fecha de Estreno: ',
+              style: TextStyle(
+                color: Colors.black, // Cambiar a RGB
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: formattedDate,
+              style: TextStyle(
+                color: Colors.red, // Cambiar a RGB
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatReleaseDate(String dateString) {
+    final releaseDate = DateTime.parse(dateString);
+    return '${releaseDate.day.toString().padLeft(2, '0')} '
+        '${_getMonthName(releaseDate.month)} ${releaseDate.year}';
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'Ene';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Abr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'Jun';
+      case 7:
+        return 'Jul';
+      case 8:
+        return 'Ago';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'Dic';
+      default:
+        return '';
+    }
+  }
+}
+
 class AnimeDetailScreen extends StatefulWidget {
   final String animeTitle;
   final Map<String, dynamic>? animeDetails;
@@ -37,7 +113,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       );
     } else {
       setState(() {
-        videoError = 'Trailer no disponble.';
+        videoError = 'Trailer no disponible.';
       });
     }
 
@@ -57,7 +133,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       });
     } else {
       setState(() {
-        translatedSynopsis = 'Sin synopsis';
+        translatedSynopsis = 'Sin sinopsis';
       });
     }
   }
@@ -86,7 +162,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.animeDetails?['images']?['jpg']?['large_image_url'];
-    //final synopsis = widget.animeDetails?['synopsis'];
+    final startDate = widget.animeDetails?['aired']?['from'];
 
     return Scaffold(
       appBar: AppBar(
@@ -134,8 +210,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
+              AnimeReleaseDate(startDate: startDate),
+              SizedBox(height: 16),
               Text(
-                'Synopsis:',
+                'Sinopsis:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -158,7 +236,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                             isVideoVisible = true;
                           });
                         },
-                        child: Text('Ver Trailer'),
+                        child: Text('Ver Tráiler'),
                       )
                     : YoutubePlayer(
                         controller: _controller,
